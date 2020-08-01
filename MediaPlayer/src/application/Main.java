@@ -1,6 +1,7 @@
 package application;
 	
 import java.io.File;
+import java.net.MalformedURLException;
 
 import javafx.application.Application;
 import javafx.stage.FileChooser;
@@ -13,10 +14,16 @@ import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application {
+	
+	FileChooser mediaChooser;
+	Player mediaPlayer;
+	
+	
 	MenuBar menu;
 	Menu fileMenu;
 	MenuItem openItem;
-	FileChooser mediaChooser;
+	
+	
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -34,8 +41,22 @@ public class Main extends Application {
 			menu.getMenus().add(fileMenu);
 			
 			openItem.setOnAction((e) -> {
-				File mediaFile=mediaChooser.showOpenDialog(primaryStage);
-				System.out.println(mediaFile.getAbsolutePath());
+				
+				try
+				{
+					File mediaFile=mediaChooser.showOpenDialog(primaryStage);
+					System.out.println(mediaFile.getAbsolutePath()+ " : "+ mediaFile.toURI().toURL().toExternalForm());
+					
+					mediaPlayer=new Player(mediaFile.toURI().toURL().toExternalForm());
+					
+					root.setCenter(mediaPlayer);
+					
+				} 
+				catch (MalformedURLException e1)
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			});
 			
 			root.setTop(menu);
@@ -43,6 +64,7 @@ public class Main extends Application {
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
