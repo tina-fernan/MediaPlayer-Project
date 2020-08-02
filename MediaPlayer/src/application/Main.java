@@ -45,10 +45,13 @@ public class Main extends Application {
 				try
 				{
 					File mediaFile=mediaChooser.showOpenDialog(primaryStage);
-					System.out.println(mediaFile.getAbsolutePath()+ " : "+ mediaFile.toURI().toURL().toExternalForm());
+					if(mediaPlayer != null)
+					{
+						mediaPlayer.player.dispose();
+					}
 					
 					mediaPlayer=new Player(mediaFile.toURI().toURL().toExternalForm());
-					
+					mediaPlayer.view.setFitWidth(scene.getWidth());
 					root.setCenter(mediaPlayer);
 					
 				} 
@@ -60,6 +63,12 @@ public class Main extends Application {
 			});
 			
 			root.setTop(menu);
+			
+			primaryStage.widthProperty().addListener((obs, ddVal,newVal)-> {
+				if(mediaPlayer != null)
+				mediaPlayer.view.setFitWidth(scene.getWidth());
+				
+			});
 			
 			
 			primaryStage.setScene(scene);
